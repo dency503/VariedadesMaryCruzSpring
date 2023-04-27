@@ -1,0 +1,43 @@
+
+
+
+   
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+body{
+    background-color: #FFF4FA;
+}
+
+:root{
+
+--bs-tertiary-bg-rgb: rgb(0, 211, 169) !important;
+}
+
+h1{
+    
+
+
+/* Medium Text Semibold */
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 20px;
+line-height: 24px;
+
+/* withe */
+
+color: #cf1010;
+
+
+/* Inside auto layout */
+
+flex: none;
+order: 0;
+flex-grow: 0;
+}
+
+img{
+    max-width: 500px;
+    max-height: 200px;
+}
