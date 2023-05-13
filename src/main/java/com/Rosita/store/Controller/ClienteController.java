@@ -3,6 +3,7 @@ package com.Rosita.store.Controller;
 
 import com.Rosita.store.Repository.ClienteRepository;
 import com.Rosita.store.Service.UserServiceImpl;
+import com.Rosita.store.Service.UsuarioService;
 import com.Rosita.store.models.Usuario;
 import com.Rosita.store.record.CreacionRecibido;
 import jakarta.servlet.http.HttpSession;
@@ -73,55 +74,20 @@ import org.springframework.security.authentication.AuthenticationManager;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/api/usuarios")
 public class ClienteController {
     @Autowired
-    private ClienteRepository usuarioRepository;
-
-    @Autowired
-    AuthenticationManager authenticationManager;
-@Autowired
-private UserServiceImpl userService;
-    private Usuario usuario;
+UsuarioService usuarioService;
 
     @GetMapping("/nuevo-cliente")
     public String mostrarFormulario(Model model) {
-
-        return "register"; // nombre de la página HTML que contiene el formulario
+return usuarioService.mostrarFormulario(model);
     }
-
-
-
-
     @PostMapping("/registro")
     @Transactional
 
-    public ResponseEntity<?> registro( @RequestBody CreacionRecibido creacionRecbido
-                          ) throws Exception {
-        // Validar que no haya otro usuario registrado con el mismo correo electrónico
-
-        System.out.println(creacionRecbido.password());
-        Usuario usuario = new Usuario(creacionRecbido.username(), creacionRecbido.email(), creacionRecbido.password());
-        if ((usuarioRepository.findByEmail(creacionRecbido.email()) != null)&&(usuarioRepository.findByUsername(creacionRecbido.username()) != null)  ) {
-            return null;
-        }
-
-
-        userService.register(usuario);
-
-        boolean isLoggedIn = true;
-        Map<String, Object> response = new HashMap<>();
-        response.put("isLoggedIn", isLoggedIn);
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> registro( @RequestBody CreacionRecibido creacionRecbido) throws Exception {
+        return usuarioService.registro(creacionRecbido);
     }
-
-
-
-
-
-
-
-
 }

@@ -32,19 +32,7 @@ public class CategoryController {
 
     @GetMapping("/")
     public ResponseEntity<List<Categoria>> showAllCategories() {
-        List<Categoria> categories = categoryService.getAllCategories();
-        //model.addAttribute("categories", categories);
-        // Obtener el objeto Authentication de la sesión del usuario
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // Utilizar el objeto Authentication para obtener los datos del usuario
-        String username = authentication.getName();
-
-
-        // Agregar los datos al modelo
-        //model.addAttribute("username", username);
-
-        return new ResponseEntity<List<Categoria>>(categories, HttpStatus.OK);
+    return categoryService.showAllCategories();
     }
 
 

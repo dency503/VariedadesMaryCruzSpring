@@ -6,38 +6,34 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.Rosita.store.Repository.ProductoRepository;
 import com.Rosita.store.models.Producto;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 public class ProductoService {
-
     @Autowired
-    private ProductoRepository productoRepository;
+    private ProductoRepository productRepository;
 
-    public List<Producto> getAllProductos() {
-        return productoRepository.findAll();
-    }
 
-    public Producto getProductoById(Long id) {
-        return productoRepository.findById(id).orElse(null);
-    }
+    // Método que maneja la solicitud de la página de producto individual
 
-    public void saveProducto(Producto producto) {
-        productoRepository.save(producto);
-    }
+    public ResponseEntity<Producto> getProduct(Long id){
+        System.out.println("El id es: " + id);
 
-    public void deleteProductoById(Long id) {
-        productoRepository.deleteById(id);
-    }
-    @GetMapping("/search")
-    public List<Producto> search(String name, String description, Optional<Double> minPrice, Optional<Double> maxPrice, String brand, String material) {
+        // Obtener el producto del repositorio por ID
+        Producto product = productRepository.findById(id).orElse(null);
 
-        return productoRepository.searchProducts(name, description, minPrice,maxPrice, brand, material);
-
+        if (product != null) {
+            return new ResponseEntity<Producto>(product, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }

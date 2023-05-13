@@ -1,6 +1,5 @@
 package com.Rosita.store.models;
 
-import com.Rosita.store.Controller.Cart;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

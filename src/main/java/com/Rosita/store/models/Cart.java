@@ -1,8 +1,5 @@
-package com.Rosita.store.Controller;
+package com.Rosita.store.models;
 
-import com.Rosita.store.models.Usuario;
-import com.Rosita.store.models.Item;
-import com.Rosita.store.models.Producto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
