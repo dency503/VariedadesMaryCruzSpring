@@ -1,4 +1,4 @@
-package com.Rosita.store.models;
+package com.Rosita.store.record;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

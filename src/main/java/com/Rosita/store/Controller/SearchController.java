@@ -1,6 +1,6 @@
 package com.Rosita.store.Controller;
 
-import com.Rosita.store.Service.ProductoService;
+
 import com.Rosita.store.Service.ProductoServiceImpl;
 import com.Rosita.store.models.Producto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.swing.text.html.parser.Entity;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class SearchController {
 
     @Autowired
-    private ProductoServiceImpl productServiceimpl;
+    private ProductoServiceImpl productServiceImpl;
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public ResponseEntity< List<Producto>> searchProducts(
@@ -30,7 +30,7 @@ public class SearchController {
             @RequestParam(name = "brand", required = false) String brand,
             @RequestParam(name = "material", required = false) String material,
             Model model) {
-        List<Producto> products = productServiceimpl.search(name, description, minPrice, maxPrice, brand, material);
+        List<Producto> products = productServiceImpl.search(name, description, minPrice, maxPrice, brand, material);
         model.addAttribute("products", products);
 
         return ResponseEntity.ok(products);

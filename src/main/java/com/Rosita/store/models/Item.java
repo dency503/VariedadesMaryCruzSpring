@@ -1,5 +1,7 @@
 package com.Rosita.store.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -25,6 +27,7 @@ public class Item {
     private BigDecimal subtotal;
 
 @ManyToOne(cascade = CascadeType.ALL)
+@JsonBackReference
 private  Cart cart;
 
     // Constructor con parámetros

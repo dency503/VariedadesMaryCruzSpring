@@ -45,7 +45,7 @@ private AutenticacionService userDetailsService;
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http.
-                cors().configurationSource(corsConfigurationSource())
+                cors()
                 .and()
 
                 .csrf().disable()
@@ -56,17 +56,6 @@ private AutenticacionService userDetailsService;
                 .build();
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Reemplaza con la URL de tu app React
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true); // Permitir el uso de credenciales
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

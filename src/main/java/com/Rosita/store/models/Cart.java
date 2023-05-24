@@ -1,5 +1,7 @@
 package com.Rosita.store.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +27,7 @@ public class Cart {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private Usuario user;
     private BigDecimal Impuesto;
     private BigDecimal subtotal;
@@ -32,6 +35,7 @@ public class Cart {
 
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL , orphanRemoval = true)
+    @JsonManagedReference
     private List<Item> items = new ArrayList<>();
 
     public void agregarItem(Producto producto, int cantidad) {

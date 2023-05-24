@@ -1,31 +1,27 @@
 package com.Rosita.store.Service;
 
-import com.Rosita.store.models.Cart;
 import com.Rosita.store.Repository.CartRepository;
 import com.Rosita.store.Repository.ItemCarritoRepository;
 import com.Rosita.store.Repository.ProductoRepository;
 import com.Rosita.store.infra.security.AutenticacionService;
-import com.Rosita.store.models.CarritoItem;
-import com.Rosita.store.models.Item;
-import com.Rosita.store.models.Producto;
-import com.Rosita.store.models.Usuario;
+import com.Rosita.store.models.*;
+
+import com.Rosita.store.record.CarritoItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class CartService {
-
     private static final BigDecimal IMPUESTO = new BigDecimal("0.13");
     @Autowired
     private ProductoRepository productoRepository;
@@ -38,8 +34,6 @@ public class CartService {
 
     @Autowired
     private AutenticacionService usuarioDetailsService;
-
-
 
 
     public ResponseEntity<String> agregarItem(@RequestBody CarritoItem carritoItem, Principal principal) {
@@ -79,7 +73,7 @@ public class CartService {
         BigDecimal total = subtotal.add(subtotal.multiply(IMPUESTO)).setScale(2, RoundingMode.HALF_UP);
         BigDecimal impuesto = subtotal.multiply(IMPUESTO).setScale(2, RoundingMode.HALF_UP);
         carritoUsuario.setImpuesto(impuesto);
-        System.out.println("El impuesto es"+impuesto);
+        System.out.println("El impuesto es" + impuesto);
 // Actualizar el carrito...
         carritoUsuario.setSubtotal(subtotal);
         carritoUsuario.setTotal(total);
@@ -87,19 +81,33 @@ public class CartService {
 // Guardar el carrito en la base de datos...
         carritoRepository.save(carritoUsuario);
 
-        return ResponseEntity.ok("Success");}
-
-    @GetMapping("/carrito")
-    public String verCarrito1(Model model, Principal principal) {
-        Usuario usuario = (Usuario) usuarioDetailsService.loadUserByUsername(principal.getName());
-        Cart carritoUsuario = carritoRepository.findByUser(usuario);
-
-        model.addAttribute("carritos", carritoUsuario);
-        return "carrito1";
+        return ResponseEntity.ok("Success");
     }
 
 
-    public String modificarItemDelCarrito(@RequestParam("itemId") Long itemId, @RequestParam("cantidad") int cantidad, Principal principal) {
+    public Cart verCarrito(Principal principal) {
+
+        try {
+
+
+            Usuario usuario = (Usuario) usuarioDetailsService.loadUserByUsername(principal.getName());
+            Cart carritoUsuario = carritoRepository.findByUser(usuario);
+
+
+            return carritoUsuario;
+        } catch (NullPointerException e) {
+            System.out.println("Error");
+return null;
+
+
+
+        }
+    }
+
+
+
+
+    public ResponseEntity<?> modificarItemDelCarrito(@RequestParam("itemId") Long itemId, @RequestParam("cantidad") int cantidad, Principal principal) {
         Producto productoEnBD = productoRepository.findById(itemId).orElseThrow(RuntimeException::new);
         Usuario usuario = (Usuario) usuarioDetailsService.loadUserByUsername(principal.getName());
         Cart carritoUsuario = carritoRepository.findByUser(usuario);
@@ -134,18 +142,17 @@ public class CartService {
         carritoUsuario.setSubtotal(subtotal);
         carritoUsuario.setTotal(total);
         carritoUsuario.setImpuesto(impuesto);
-        System.out.println("El impuesto es"+impuesto);
+        System.out.println("El impuesto es" + impuesto);
 
         // Guardar el carrito en la base de datos...
         carritoRepository.save(carritoUsuario);
-        return "redirect:/carrito";
+        return  ResponseEntity.ok("success");
     }
 
 
-    public String eliminarDelCarrito(
-            @RequestParam("itemId") Long itemId,
-            Principal principal
-    ) {
+    public ResponseEntity<?> eliminarDelCarrito(
+            @RequestParam("itemId") Long itemId, Principal principal) {
+
         try {
             // Verificar si el usuario es un cliente
             Usuario usuario = (Usuario) usuarioDetailsService.loadUserByUsername(principal.getName());
@@ -179,12 +186,12 @@ public class CartService {
             }
 
             // Redirigir a la página de carrito
-            return "redirect:/carrito";
+            return  ResponseEntity.ok("success");
 
         } catch (Exception e) {
             // Manejar las excepciones y mostrar un mensaje de error
             String mensajeError = "No se pudo eliminar el producto del carrito. " + e.getMessage();
-            return "redirect:/carrito1?error=" + mensajeError;
+            return (ResponseEntity<?>) ResponseEntity.internalServerError();
         }
     }
 
