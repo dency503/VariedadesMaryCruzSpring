@@ -98,7 +98,7 @@ public class CartService {
 
             return carritoUsuario;
         } catch (NullPointerException e) {
-            System.out.println("Error");
+
 return null;
 
 

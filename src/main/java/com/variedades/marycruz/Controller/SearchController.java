@@ -5,6 +5,7 @@ import com.variedades.marycruz.Service.ProductoServiceImpl;
 import com.variedades.marycruz.models.Producto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -24,6 +25,7 @@ public class SearchController {
     @Autowired
     private ProductoServiceImpl productServiceImpl;
     @Operation(summary = "Buscar producto")
+    @Transactional
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public ResponseEntity< List<Producto>> searchProducts(
             @RequestParam(name = "q", required = false) String name,

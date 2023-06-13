@@ -33,7 +33,6 @@ public class Cart {
     private BigDecimal subtotal;
     private BigDecimal Total;
 
-
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL , orphanRemoval = true)
     @JsonManagedReference
     private List<Item> items = new ArrayList<>();

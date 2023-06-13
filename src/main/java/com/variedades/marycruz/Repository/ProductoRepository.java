@@ -33,6 +33,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
     }
 
     Producto findByIdAndEliminadoIsFalse(Long productoId);
+
+    List<Producto> findAllByOrderByFechaLanzamientoDesc();
 }
 
 

@@ -7,6 +7,7 @@ import com.variedades.marycruz.record.CreacionRecibido;
 import com.variedades.marycruz.record.LoginRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,10 +64,16 @@ public class UsuarioService {
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 SecurityContextHolder.getContext());
         boolean isLoggedIn = true;
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization",JWRtoken);
         Map<String, Object> response = new HashMap<>();
         response.put("isLoggedIn", isLoggedIn);
-        response.put("token", JWRtoken);
-        return ResponseEntity.ok(response);
+
+
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, JWRtoken).body(response);
+        //return ResponseEntity.ok(response);
     }
 
     @Autowired

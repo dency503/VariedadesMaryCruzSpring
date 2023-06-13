@@ -1,85 +1,94 @@
 package com.variedades.marycruz.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.variedades.marycruz.Service.CategoryService;
+import com.variedades.marycruz.record.RecibirProducto;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Date;
 
 @Entity
 @Table(name = "productos")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Producto {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank
-    @Column( nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    private String description;
     @NotNull
     @Column(nullable = false)
     private BigDecimal price;
+
     @NotBlank
     @Column(nullable = false)
     private String imageName;
-    private boolean eliminado;
 
-    @NotBlank
     @Column(nullable = false)
+    private String urlImage;
+    @Column(nullable = false)
+    private boolean esEnOferta;
+    @Column(nullable = false)
+    private Date fechaLanzamiento;
+    @Column(nullable = false)
+    private int unidadesDisponibles;
+
+    private double precioUnitario;
+    private String description;
     private String brand;
-
-
-    @OneToMany(mappedBy = "product")
-    @JsonIgnore
-    private List<ProductDetails> details;
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
+    @JsonBackReference
+    @OneToOne(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ProductDetails details;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
-    @JsonIgnore
+    @JsonManagedReference
 
     private Categoria categoria;
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", imageName='" + imageName + '\'' +
+    private boolean eliminado;
 
-                ", brand='" + brand + '\'' +
-                ", details=" + details +
-                ", categoria=" + categoria +
-                '}';
+
+public Producto(@Valid RecibirProducto recibirProducto, CategoryService categoryService ) {
+    this.name = recibirProducto.name();
+    this.price = recibirProducto.price();
+    this.imageName = recibirProducto.imageName();
+    this.eliminado = recibirProducto.eliminado();
+    this.urlImage = recibirProducto.urlImage();
+
+    this.categoria =recibirProducto.categoria();
+    this.esEnOferta = recibirProducto.esEnOferta();
+    this.unidadesDisponibles = recibirProducto.unidadesDisponibles();
+    this.description = recibirProducto.description();
+    this.brand = recibirProducto.brand();
+}
+    public Categoria categoria(CategoryService categoryService,long id) {
+        // Lógica para obtener el objeto de la categoría según su id
+        return categoryService.getForId(id).orElse(null);
     }
 
-    public Producto(String nombre, BigDecimal  precio, String imageName, String descripcion) {
-        this.name = nombre;
-        this.price = precio;
-        this.imageName = imageName;
-        this.description = descripcion;
+    @PrePersist
+    protected void onCreate() {
+        if (fechaLanzamiento == null) {
+            fechaLanzamiento = new Date();
+        }
     }
+
 
 }

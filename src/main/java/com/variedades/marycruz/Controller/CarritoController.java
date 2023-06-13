@@ -35,7 +35,6 @@ public class CarritoController {
     @Operation(summary = "ver el carrito")
     public ResponseEntity<Cart> verCarrito(Principal principal) {
 
-        System.out.println(principal.getName());
 
         return ResponseEntity.ok(cartService.verCarrito(principal));
     }

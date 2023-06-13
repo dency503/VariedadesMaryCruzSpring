@@ -20,13 +20,12 @@ public class TokenService {
     public  String generarToken(Usuario principal){
         try {
             Algorithm algorithm = Algorithm.HMAC256(apiSecret);
-            String auth0 = JWT.create()
+            return JWT.create()
                     .withIssuer("voll med")
                     .withSubject(principal.getUsername())
                     .withClaim("id", principal.getId())
                     .withExpiresAt(generarFechaExpiracion())
                     .sign(algorithm);
-            return auth0;
         } catch (
                 JWTCreationException exception){
             throw  new RuntimeException();
